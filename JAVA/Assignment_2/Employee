@@ -1,0 +1,61 @@
+
+public abstract class Employee {
+	protected String name;
+	protected String Address;
+	protected int age;
+	protected char gender;
+	protected double basicSalary;
+	
+	public Employee(String name, String Address, int age, char gender, double basicSalary) {
+		this.name = name;
+		this.Address = Address;
+		this.age = age;
+		this.gender = gender;
+		this.basicSalary = basicSalary;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return Address;
+	}
+
+	public void setAddress(String address) {
+		Address = address;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		if(age <18 || age > 65)
+			this.age = 21;
+		else
+			this.age = age;
+	}
+
+	public char getGender() {
+		return gender;
+	}
+
+	public void setGender(char gender) {
+		this.gender = gender;
+	}
+
+	public double getBasicSalary() {
+		return basicSalary;
+	}
+
+	public void setBasicSalary(double basicSalary) {
+		this.basicSalary = basicSalary;
+	}
+	
+	
+}
