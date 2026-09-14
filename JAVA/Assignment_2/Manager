@@ -1,0 +1,20 @@
+
+public class Manager extends Employee{
+	protected float hra;
+
+	public Manager(String name, String Address, int age, char gender, double basicSalary, float hra) {
+		super(name, Address, age, gender, basicSalary);
+		
+		this.hra = hra;
+	}
+
+	public float getHra() {
+		return hra;
+	}
+
+	public void setHra(float hra) {
+		this.hra = hra;
+	}
+	
+	
+}
