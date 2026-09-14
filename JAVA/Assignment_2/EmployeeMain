@@ -1,0 +1,459 @@
+public class EmployeeMain {
+
+    public static void main(String[] args) {
+
+        System.out.print("Enter How Many Number of Emp You Want to Process : ");
+        int NoOfEmp = ConsoleInput.getInt();
+
+        Employee[] emp = new Employee[NoOfEmp];
+
+        // 1 = Manager
+        // 2 = Engineer
+        // 3 = SalesPerson
+        int[] empType = new int[NoOfEmp];
+
+        int count = 0;
+        boolean menu = true;
+
+        while (menu) {
+
+            System.out.println();
+            System.out.println("1 : Add");
+            System.out.println("2 : Display");
+            System.out.println("3 : Delete");
+            System.out.println("4 : Sort");
+            System.out.println("5 : Save");
+            System.out.println("6 : Load");
+            System.out.println("7 : Exit");
+
+            System.out.print("Enter Which Operation You Want To Perform : ");
+            int choice = ConsoleInput.getInt();
+
+
+            switch (choice) {
+
+            // =================================================
+            // ADD
+            // =================================================
+            case 1:
+
+                if (count >= emp.length) {
+                    System.out.println("Employee Array is Full");
+                    break;
+                }
+
+                boolean empMenu = true;
+
+                while (empMenu) {
+
+                    System.out.println();
+                    System.out.println("1 : Manager");
+                    System.out.println("2 : Engineer");
+                    System.out.println("3 : SalesPerson");
+                    System.out.println("4 : Exit");
+
+                    System.out.print("Enter Employee Type : ");
+                    int option = ConsoleInput.getInt();
+
+
+                    if (option == 4) {
+                        empMenu = false;
+                        break;
+                    }
+
+
+                    if (option < 1 || option > 3) {
+                        System.out.println("Enter Valid Entry");
+                        continue;
+                    }
+
+
+                    // Common Employee Information
+                    System.out.print("Enter a Name : ");
+                    String name = ConsoleInput.getString();
+
+                    System.out.print("Enter the Address : ");
+                    String Address = ConsoleInput.getString();
+
+                    System.out.print("Enter Age : ");
+                    int age = ConsoleInput.getInt();
+
+                    System.out.print("Enter Gender : ");
+                    char gender = ConsoleInput.getString().charAt(0);
+
+                    System.out.print("Enter Basic Salary : ");
+                    double basicSalary = ConsoleInput.getFloat();
+
+
+                    switch (option) {
+
+                    // -----------------------------------------
+                    // MANAGER
+                    // -----------------------------------------
+                    case 1:
+
+                        System.out.print("Enter HRA : ");
+                        float hra = ConsoleInput.getFloat();
+
+                        emp[count] = new Manager(
+                                name,
+                                Address,
+                                age,
+                                gender,
+                                basicSalary,
+                                hra
+                        );
+
+                        empType[count] = 1;
+
+                        count++;
+
+                        System.out.println("Manager Added Successfully.");
+
+                        break;
+
+
+                    // -----------------------------------------
+                    // ENGINEER
+                    // -----------------------------------------
+                    case 2:
+
+                        System.out.print("Enter OverTime : ");
+                        float OverTime = ConsoleInput.getFloat();
+
+                        emp[count] = new Engineer(
+                                name,
+                                Address,
+                                age,
+                                gender,
+                                basicSalary,
+                                OverTime
+                        );
+
+                        empType[count] = 2;
+
+                        count++;
+
+                        System.out.println("Engineer Added Successfully.");
+
+                        break;
+
+
+                    // -----------------------------------------
+                    // SALESPERSON
+                    // -----------------------------------------
+                    case 3:
+
+                        System.out.print("Enter Commition of Sales Person : ");
+                        float commition = ConsoleInput.getFloat();
+
+                        emp[count] = new SalesPerson(
+                                name,
+                                Address,
+                                age,
+                                gender,
+                                basicSalary,
+                                commition
+                        );
+
+                        empType[count] = 3;
+
+                        count++;
+
+                        System.out.println("SalesPerson Added Successfully.");
+
+                        break;
+                    }
+
+
+                    if (count >= emp.length) {
+                        System.out.println("Employee Array is Full");
+                        empMenu = false;
+                    }
+                }
+
+                break;
+
+
+            // =================================================
+            // DISPLAY
+            // =================================================
+            case 2:
+
+                if (count == 0) {
+                    System.out.println("No Employee Available.");
+                    break;
+                }
+
+
+                for (int itemp = 0; itemp < count; itemp++) {
+
+                    System.out.println();
+                    System.out.println("Employee " + (itemp + 1));
+
+                    System.out.println("Name : "
+                            + emp[itemp].getName());
+
+                    System.out.println("Address : "
+                            + emp[itemp].getAddress());
+
+                    System.out.println("Age : "
+                            + emp[itemp].getAge());
+
+                    System.out.println("Gender : "
+                            + emp[itemp].getGender());
+
+                    System.out.println("Basic Salary : "
+                            + emp[itemp].getBasicSalary());
+
+
+                    // Manager
+                    if (empType[itemp] == 1) {
+
+                        Manager m = (Manager) emp[itemp];
+
+                        System.out.println("HRA : "
+                                + m.getHra());
+                    }
+
+
+                    // Engineer
+                    else if (empType[itemp] == 2) {
+
+                        Engineer e = (Engineer) emp[itemp];
+
+                        System.out.println("Over Time : "
+                                + e.getOvertime());
+                    }
+
+
+                    // SalesPerson
+                    else if (empType[itemp] == 3) {
+
+                        SalesPerson s = (SalesPerson) emp[itemp];
+
+                        System.out.println("Commission : "
+                                + s.getCommition());
+                    }
+                }
+
+                break;
+
+
+            // =================================================
+            // DELETE
+            // =================================================
+            case 3:
+
+                System.out.println("Not For Implementation");
+
+                break;
+
+
+            // =================================================
+            // SORT
+            // =================================================
+            case 4:
+
+                boolean sortMenu = true;
+
+                while (sortMenu) {
+
+                    System.out.println();
+                    System.out.println("1 : By Name Ascending");
+                    System.out.println("2 : By Name Descending");
+                    System.out.println("3 : By Designation");
+                    System.out.println("4 : Exit");
+
+                    System.out.print("Enter Sort Choice : ");
+                    int sortChoice = ConsoleInput.getInt();
+
+
+                    switch (sortChoice) {
+
+                    // =========================================
+                    // ASCENDING
+                    // =========================================
+                    case 1:
+
+                        for (int i = 0; i < count - 1; i++) {
+
+                            for (int j = i + 1; j < count; j++) {
+
+                                String name1 = emp[i].getName();
+                                String name2 = emp[j].getName();
+
+                                int k = 0;
+
+                                // Compare characters
+                                while (k < name1.length() && k < name2.length()) {
+
+                                    if (name1.charAt(k) > name2.charAt(k)) {
+
+                                        Employee temp = emp[i];
+                                        emp[i] = emp[j];
+                                        emp[j] = temp;
+
+                                        int tempType = empType[i];
+                                        empType[i] = empType[j];
+                                        empType[j] = tempType;
+
+                                        break;
+                                    }
+
+                                    else if (name1.charAt(k) < name2.charAt(k)) {
+
+                                        break;
+                                    }
+
+                                    k++;
+                                }
+
+                                // If all characters are same,
+                                // shorter name comes first
+                                if (k == name2.length()
+                                        && name1.length() > name2.length()) {
+
+                                    Employee temp = emp[i];
+                                    emp[i] = emp[j];
+                                    emp[j] = temp;
+
+                                    int tempType = empType[i];
+                                    empType[i] = empType[j];
+                                    empType[j] = tempType;
+                                }
+                            }
+                        }
+
+                        System.out.println("Sorted By Name in Ascending Order.");
+
+                        break;
+
+
+                    // =========================================
+                    // DESCENDING
+                    // =========================================
+                    case 2:
+
+                        for (int i = 0; i < count - 1; i++) {
+
+                            for (int j = i + 1; j < count; j++) {
+
+                                String name1 = emp[i].getName();
+                                String name2 = emp[j].getName();
+
+                                int k = 0;
+
+                                // Compare characters
+                                while (k < name1.length()
+                                        && k < name2.length()) {
+
+                                    if (name1.charAt(k) < name2.charAt(k)) {
+
+                                        Employee temp = emp[i];
+                                        emp[i] = emp[j];
+                                        emp[j] = temp;
+
+                                        int tempType = empType[i];
+                                        empType[i] = empType[j];
+                                        empType[j] = tempType;
+
+                                        break;
+                                    }
+
+                                    else if (name1.charAt(k) > name2.charAt(k)) {
+
+                                        break;
+                                    }
+
+                                    k++;
+                                }
+
+                                // If all characters are same,
+                                // longer name comes first
+                                if (k == name1.length()
+                                        && name1.length() < name2.length()) {
+
+                                    Employee temp = emp[i];
+                                    emp[i] = emp[j];
+                                    emp[j] = temp;
+
+                                    int tempType = empType[i];
+                                    empType[i] = empType[j];
+                                    empType[j] = tempType;
+                                }
+                            }
+                        }
+
+                        System.out.println("Sorted By Name in Descending Order.");
+
+                        break;
+
+
+                    // =========================================
+                    // DESIGNATION
+                    // =========================================
+                    case 3:
+
+                        System.out.println("Sort By Designation Not For Implementation.");
+
+                        break;
+
+
+                    // =========================================
+                    // EXIT
+                    // =========================================
+                    case 4:
+
+                        sortMenu = false;
+
+                        break;
+
+
+                    default:
+
+                        System.out.println("Enter Valid Entry.");
+                    }
+                }
+
+                break;
+
+            // =================================================
+            // SAVE
+            // =================================================
+            case 5:
+
+                System.out.println("Not For Implementation");
+
+                break;
+
+
+            // =================================================
+            // LOAD
+            // =================================================
+            case 6:
+
+                System.out.println("Not For Implementation");
+
+                break;
+
+
+            // =================================================
+            // EXIT
+            // =================================================
+            case 7:
+
+                menu = false;
+
+                System.out.println("Program Terminated.");
+
+                break;
+
+
+            default:
+
+                System.out.println("Enter Valid Entry.");
+            }
+        }
+    }
+}
