@@ -1,0 +1,21 @@
+
+public class Engineer extends Employee{
+	protected float overtime;
+
+	public Engineer(String name, String Address, int age, char gender, double basicSalary, float overtime) {
+		super(name, Address, age, gender, basicSalary);
+		
+		this.overtime = overtime;
+		
+	}
+
+	public float getOvertime() {
+		return overtime;
+	}
+
+	public void setOvertime(float overtime) {
+		this.overtime = overtime;
+	}
+	
+	
+}
