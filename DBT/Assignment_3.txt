@@ -1,0 +1,74 @@
+1. Write a query to calculate the total salary of all employees. 
+select sum(salary)from employee;
+
+2. Write a query to find the average salary of employees in each department using GROUP BY. 
+select deptname, avg(salary) from employee e join dept d 
+on e.deptid = d.deptid group by e.deptid;
+
+3. Write a query to count the total number of employees in each department.
+select deptname, count(*) from employee e join dept d
+on e.deptid = d.deptid group by e.deptid;
+
+4. Write a query to display departments having more than 5 employees using HAVING clause. 
+select d.deptname from employee e join dept d 
+on e.deptid = d.deptid group by d.deptid having count(*) > 5;
+
+5. Write a query to list distinct department locations from the Dept table. 
+select distinct location from dept;
+
+6. Write a query to display the highest salary among all employees.  Write a query to display all total number of  employee in table. 
+select max(salary), count(*) from employee;
+
+7. Write a query to find employees whose name starts with 'A' using LIKE operator. 
+select * from employee where empname like 'A%';
+
+8. Write a query to find employees whose name ends with 'n' using LIKE operator. 
+select * from employee where empname like'%n';
+
+9. Write a query to find employees whose name contains 'ra' using LIKE operator. 
+select * from employee where empname like '%ra%';
+
+10. Write a query to display all employees sorted by their Salary in descending order. 
+select * from employee order by salary desc;
+
+11. Write a query to display all employees sorted by DeptID ascending and then Salary descending. 
+select * from employee order by deptid, salary desc;
+
+12. Write a query to find employees whose salary is between 30,000 and 60,000. 
+select * from employee where salary between 30000 and 60000;
+
+13. Write a query to display all employees whose DeptID is in (10, 20, 30). 
+select * from employee where deptid in (10, 20, 30);
+
+14. Write a query to display Min salary of employee.
+select min(salary) from employee;
+
+15. Write a query to display employees whose JoiningDate is between '2020-01-01' and '2021-12-31'.
+select * from employee where JoiningDate between '2020-01-01' and '2021-12-31'; 
+
+16. Write a query to display employees whose Salary is NULL. 
+select * from employee where salary is null;
+
+17. Write a query to display employees whose Salary is NOT NULL. 
+select * from employee where salary is not null;
+
+18. Write a query to calculate the total salary per department, but only for departments where total salary is greater than 1,00,000 (use HAVING). 
+select deptname, sum(salary) from employee e join dept d 
+on e.deptid = d.deptid group by e.deptid having sum(salary) > 100000;
+
+19. Write a query to display all distinct employee names.
+select distinct empname from employee;
+
+20. Write a query to count the number of departments having the same location. 
+select location, count(*) from dept group by location having count(*) > 1;
+
+
+
+
+
+
+
+
+
+
+

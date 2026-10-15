@@ -1,0 +1,129 @@
+				Assignment 1
+
+1. Write the SQL command to create a table Authors with the following fields: - author_id (Primary Key, INT) - name (VARCHAR(100)) - country (VARCHAR(50)) 
+
+create table author(
+author_id int primary key,
+name varchar(100),
+country varchar(50)
+);
+
+2. rite the SQL command to create a table Books with the following fields: - book_id (Primary Key, INT) - title (VARCHAR(150)) - author_id (Foreign Key referencing Authors) - published_year (YEAR) - available_copies (INT) 
+
+create table Books(
+book_id int primary key,
+title varchar (150),
+author_id int,
+foreign key (author_id) references author(author_id),
+published_year date,
+available_copies int
+);
+
+3. Write the SQL command to create a table Members with: - member_id (Primary Key, INT) - name (VARCHAR(100)) - email (VARCHAR(100), unique) - phone (VARCHAR(15)) 
+
+create table members(
+member_id int primary key,
+name varchar(100),
+email varchar(100) unique,
+phone varchar(100)
+);
+
+4.  Write the SQL command to create a table Borrow_Records with: - record_id (Primary Key, INT) - member_id (Foreign Key referencing Members) - book_id (Foreign Key referencing Books) - borrow_date (DATE) - return_date (DATE)
+
+create table borrow_records(
+record_id int primary key,
+member_id int,
+foreign key (member_id) references members(member_id),
+book_id int,
+foreign key (book_id) references books(book_id),
+borrow_date date,
+return_date date
+);
+
+6. Modify the Books table to add a column genre of type VARCHAR(50). 
+alter table books add genere varchar(50);
+
+7. Write the SQL command to drop the Borrow_Records table. 
+drop table borrow_records;
+
+8. Insert 3 records into the Authors table. 
+insert into author(author_id, name, country) values
+(101, 'Prajwal', 'India'),
+(102, 'Peter', 'England'),
+(103, 'Stephen', 'America');
+
+9. Insert 5 books into the Books table. 
+insert into books (book_id, title, author_id, published_year, available_copies ) values
+(1, 'Java', 101, '2024-10-10', 34),
+(2, 'C++', 102, '2026-09-09',45),
+(3, 'Java Script', 101, '2013-10-03', 56),
+(4, 'C#', 102, '2024-10-12', 67),
+(5, 'Web Tech', 103, '2015-10-04', 11);
+
+10. Insert 3 members into the Members table.
+insert into members(member_id, name, email, phone) values
+(111, 'Mohit', 'mohit@gmail.com', '2345372537'),
+(222, 'yash', 'yashpatil@gmail.com', '1894964224'),
+(333, 'Nakul', 'patilnakul@gmail.com', '1849241613');
+
+
+11. Insert 4 borrow records into the Borrow_Records table. 
+insert into borrow_records (record_id, member_id, book_id , borrow_date, return_date) values
+(11, 111, 2, '2026-10-11', null),
+(12, 222, 4, '2026-09-10', '2026-09-23'),
+(13, 111, 3, '2024-04-11', '2024-04-21'),
+(14, 333, 5, '2025-10-11', '2025-11-11');
+
+12. Write an SQL query to select all books where published_year is after 2015.
+select * from books where published_year > '2015-12-31';
+
+13. Write a SQL query to create a foreign key & primary key relationship between two tables. 
+
+
+14. Write an SQL query to find all members who have borrowed the book with title 'Java'.
+select * from  
+
+15. Update the available_copies column of a specific book (choose any book) by reducing it 
+by 1 after it is borrowed. 
+update books set available_copies = available_copies - 1 where book_id = 1;
+
+16. Delete a record from Members where member_id = 3.
+
+delete from members where member_id = 333;
+
+17. Update a Book name record from Book table  with id = 1.
+update books set title = 'ADS' where book_id = 1;
+
+18. Write an SQL query to list all books along with their authors' names. 
+select books.title, author.name from books join author on books.author_id = author.author_id;
+
+19. Write an SQL query to delete all books from the Books table where the published_year is before 2000.
+delete from books where published_year < '2000-01-01';
+
+20. Write an SQL query to find all books that are never borrowed (i.e., no records in Borrow_Records).
+select * from borrow_records where borrow_date is null;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

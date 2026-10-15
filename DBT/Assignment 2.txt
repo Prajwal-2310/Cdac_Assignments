@@ -1,0 +1,132 @@
+			Assignment 2
+
+1. Write a SQL query to create Employee & Department table with specific columns and
+constraints.(Note- Create Table, insert data as per your Choice).
+
+
+create table department(
+dept_id int primary key,
+dept_name varchar(50),
+status varchar(30)
+);
+budget added
+
+create table employee(
+emp_id int primary key,
+emp_name varchar(50),
+emp_age int,
+dept_id int,
+foreign key(dept_id) references department(dept_id)
+);
+gender added
+
+2. Write a SQL query to add any new column to an existing table. 
+alter table department add column budget float check(budget > 0.0);
+alter table employee add column emp_gender Enum('male', 'Female');
+
+3. Write a SQL query to insert multiple records (At least 5) into a table in a single operation.
+
+insert into department(dept_id, dept_name, status, budget) values
+(1, 'HR', 'Active', 70000.0),
+(2, 'Manager', 'Active', 50000.0),
+(3, 'Engineer', 'Active', 90000.0),
+(4, 'Sales', 'Active', 40000.0),
+(5, 'Other', 'Active', '30000.0');
+
+insert into employee(emp_id, emp_name, emp_age, dept_id, emp_gender, salary) values
+(1, 'Prajwal', 22, 1, 'Male', 60000.0),
+(2, 'Manas', 22, 4, 'Male', 30000.56),
+(3, 'Pranita', 26, 3, 'Female', 70000.0),
+(4, 'Nakul', 22, 5, 'Male', 40000.40),
+(5, 'Kalpesh', 30, 2, 'Male',89567.45 );
+
+4. Write a SQL query to delete all records from a table. 
+delete from employee;
+
+5. Write a SQL query to update salary records from a table where id = 5.
+update employee set salary = 94567.78 where emp_id = 5;
+
+6. Write a query to grant SELECT privilege on the Emp table to user readonly_user.
+create user 'random_user'@'localhost' identified by 'Random@123';
+grant select on assignment_2.employee to 'random_user'@'localhost';
+
+7. Write a query to revoke INSERT privilege on the Emp table from user temp_user. 
+revoke select on assignment_2.employee from 'random_user'@'localhost';
+
+8. Write a query to insert a new employee into the Emp table and commit the transaction.
+
+start transaction;
+insert into employee values(6, 'Yash', 23, 3, 'Male', 39675.67);
+commit;
+
+9. Write a query to update the Salary of an employee with EmpID = 101 and commit the transaction. 
+update employee set salary = 77428.67 where emp_id = 1;
+commit;
+
+10. Write a query to set a SAVEPOINT before updating the DeptID of an employee.
+savepoint sp1;
+update employee set emp_id = 7 where emp_id = 5;
+
+11. Write a query to rollback to the previously created SAVEPOINT.
+rollback to savepoint sp1;
+
+12. Write a query to truncate all data from the Emp table. 
+truncate table employee;
+
+13. Write a query to list all employees whose salary is greater than 50,000. 
+select * from employee where salary > 50000.0;
+
+14. Write a query to increase the salary of all employees in DeptID = 10 by 10%. 
+update employee set salary = round(salary + (salary * (10/100)),2) where dept_id = 4;
+
+15. Write a query to count the total number of employees in each department.
+select dept_id, count(*) as total_emp from employee group by emp_id;   
+
+16. Write a query to list departments that have no employees.
+
+select d.dept_id, count(e.emp_id) as total_emp
+from department d 
+left join employee e
+ on d.dept_id = e.dept_id
+group by d.dept_id
+having count(e.emp_id) = 0;
+
+16. create a view for those salespeople having gender 'Male'
+create view know_gender
+as
+select emp_name, emp_gender, dept_name from department join employee
+on department.dept_id = employee.dept_id;
+
+select * from know_gender;
+
+17. Write a query to display the highest salary among all employees. 
+select max(salary) from employee;
+
+18. Write a query to display the 2nd highest salary among all employees. 
+select distinct salary from employee order by salary desc limit 1 offset 1;
+
+19. Write a query to show all employees ordered by salary in descending order. 
+select emp_name, salary from employee order by salary desc;
+
+20. Write a query to rename the DeptName column to DepartmentName. 
+alter table department rename column dept_name to department_name;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
