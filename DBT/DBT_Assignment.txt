@@ -1,0 +1,315 @@
+Section 1 — DDL and DML
+
+
+1. Create a table called student_contact with contact_id as the primary key, student_id as a foreign key, phone_number as UNIQUE, and contact_type defaulting to 'Personal'.
+
+create table student_contact (
+contact_id int primary key, 
+student_id int,
+phone_number unique,
+contact_type varchar(50) default 'personal',
+foreign key(student_id) references student(student_id)
+);
+
+2. Add a column admission_year of type YEAR to the student table.
+alter table student add column admission_year year;
+
+3. Modify the course table so that the fee column can store values up to 999999.999
+alter table course modify column fee decimal(10,3);
+
+4. Increase the fee by 8% for courses whose current fee is below 6000.
+update course set fee = fee + (fee * 8/100) where fee < 6000;
+
+5. Update the status of a scholarship record to 'Approved' only if its amount is at least 5000. 
+update scholarship set status = 'Approved' where amount >= 5000;
+
+6. Delete only those enrollment records for which marks are NULL and the enrollment date is before 1 September 2026.
+delete from enrollment where marks is null and enroll_date < '2026-09-01';
+
+7. Create a backup table named faculty_backup containing all rows and columns currently present in faculty.
+create table faculty_backup(
+faculty_id int primary key,
+faculty_name varchar(50),
+salary decimal(10,2),
+dept_id int,
+foreign key(dept_id) references department(dept_id)
+);
+
+
+
+
+Section 2 — Filtering and sorting
+
+
+8. Display students whose names have exactly five characters and whose city is not Mumbai.
+select * from student where student_name like'_____' and city != 'Mumbai';
+
+9. Find courses whose fees are not between 5000 and 6500, ordered by course name.
+select * from course where fee not between 5000 and 6500 order by course_name;
+
+10. Display students born in the first half of 2003, excluding students with unknown dates of birth.
+select * from student where dob between '2003-01-01' and '2003-06-30' and dob is not null;
+
+11. Find enrollment records created in August 2026 where marks are divisible by 7.
+select * from enrollment where enroll_date between '2026-08-01' and '2026-08-31' and marks%7=0;
+
+12. Display the four most expensive courses, showing course name, fee and faculty_id. Resolve equal fees consistently.
+select course_name, fee, faculty_id from course order by fee desc, course_id asc limit 4;
+
+13. List students whose names contain at least two occurrences of the letter 'a'.
+select * from student where student_name like '%a%a%';
+
+14. Display distinct pairs of city and department ID for students, excluding records where either value is NULL.
+select distinct city, dept_id from student where city is not null and dept_id is not null; 
+
+
+
+
+Section 3 — Aggregate functions and grouping
+
+15. Display the total fee, average fee, minimum fee and maximum fee for courses, grouped by faculty member.
+select faculty_id,sum(fee) as total_fee, avg(fee) as average_fee, min(fee) as minimum_fee, max(fee) as maximum_fee from course group by faculty_id;
+
+16. Find departments in which the combined faculty salary is greater than 100000 and at least two faculty members work.
+select dept_id,sum(salary) as total_salary from faculty group by dept_id having sum(salary) > 100000 and count(*) >= 2;
+
+17. Show each course's enrollment count and highest recorded mark, including courses with zero enrollments.
+select count(*) as enroll_count ,max(marks) as highest_marks from enrollment group by course_id;
+
+18. Find the difference between the highest and lowest recorded marks in each course, but only for courses with at least three evaluated students.
+select course_id, (max(marks) - min(marks)) as difference from enrollment group by course_id having count(marks)>=3; 
+
+19. Calculate the percentage of enrolled students who have marks of 80 or higher for each course. Exclude NULL marks from the denominator.
+select course_id, sum(case when marks >= 80 then 1 else 0 end) * 100.0 / count(marks) as percentage from enrollment group by course_id;
+
+20. Display departments whose student count is below the average student count across all departments, treating departments with no students as having zero.
+SELECT
+    d.dept_id,
+    d.dept_name,
+    COUNT(s.student_id) AS student_count
+FROM department d
+LEFT JOIN student s
+    ON d.dept_id = s.dept_id
+GROUP BY d.dept_id, d.dept_name
+HAVING COUNT(s.student_id) < (
+    SELECT AVG(student_count)
+    FROM (
+        SELECT COUNT(s2.student_id) AS student_count
+        FROM department d2
+        LEFT JOIN student s2
+            ON d2.dept_id = s2.dept_id
+        GROUP BY d2.dept_id
+    ) AS dept_counts
+);
+
+21. Show each faculty member's name and the total fees of courses assigned to them, but include only faculty members whose assigned courses generate more than 6000 in total fees.
+
+select f.faculty_name, sum(c.fee) as total_fees 
+from faculty as f 
+join course as c 
+on f.faculty_id = c.faculty_id
+group by f.faculty_id, f.faculty_name
+having sum(c.fee) >= 6000;
+
+
+Section 4 — Joins and set operations
+
+22. Display each student's name, course name, marks and the name of the faculty member teaching that course.
+select s.student_name, c.course_name, e.marks, f.faculty_name
+from 
+student s join enrollment e on s.student_id = e.student_id
+join course c on c.course_id = e.course_id
+join faculty f on f.faculty_id = c.faculty_id;
+
+23. List all faculty members with their department names, including faculty members whose department ID is NULL.
+select f.faculty_name, d.dept_name 
+from
+faculty f left join department d
+on f.dept_id = d.dept_id;
+
+24. Find students who share the same date of birth with at least one other student. Display each matching pair only once.
+
+select s1.student_name AS student1,
+       s2.student_name AS student2,
+       s1.dob
+from student s1 join student s2
+on s1.dob = s2.dob
+AND s1.student_id <> s2.student_id
+AND s1.student_id < s2.student_id;
+
+
+25. Display every department with the names of its students, but show one row with a NULL student name for departments without students.
+
+select d.dept_name, s.student_name 
+from
+department d left join student s
+on d.dept_id = s.dept_id;
+
+26. Find students who are enrolled in a course taught by a faculty member from a different department than the student's department.
+
+select s.student_name, c.course_name, f.faculty_name, d.dept_name
+from
+student s join enrollment e on s.student_id = e.student_id
+join course c on c.course_id = e.course_id
+join faculty f on f.faculty_id = c.faculty_id
+join department d on d.dept_id = f.dept_id
+WHERE s.dept_id <> f.dept_id;
+
+27. Display faculty members who teach at least one course but have no student enrolled in any of their courses.
+
+select f.faculty_name, c.course_name
+from 
+faculty f join course c on f.faculty_id = c.faculty_id
+left join enrollment e on e.course_id = c.course_id
+where e.student_id is null;
+
+28. Combine the student names and faculty names into a single column named person_name, removing duplicates and sorting alphabetically.
+
+select faculty_name as person_name 
+from faculty 
+
+union 
+
+select student_name as person_name 
+from student 
+order by person_name;
+
+29. Find student IDs enrolled in both DBMS and Java, using a set operator if supported or an alternative SQL query.
+
+select e.student_id 
+from 
+enrollment as e join course as c 
+on e.course_id = c.course_id
+where c.course_name in('DBMS', 'JAVA')
+group by e.student_id 
+having count(distinct c.course_name) = 2;
+
+
+Section 5 — Subqueries and correlated queries
+
+30. Find students whose highest mark across their courses is greater than the average of the highest marks achieved by all students.
+
+select student_id, max(marks) as highest_marks from enrollment
+group by student_id 
+having max(marks) > (select avg(highest_marks) 
+from(
+select student_id, max(marks) as highest_marks
+from enrollment
+group by student_id
+) as student_highest
+);
+
+
+31. Find courses whose fee is higher than the average fee of courses taught by faculty in the same department.
+
+select c.course_name, c.fee 
+from course c
+join faculty f
+on c.faculty_id = f.faculty_id
+where c.fee > (
+select avg(c1.fee) from course c1
+join faculty f1
+on c1.faculty_id = f1.faculty_id
+where
+f1.dept_id = f.dept_id);
+
+32. Find faculty members who earn more than every faculty member in department 1, without hardcoding any salary.
+
+select faculty_name, salary from faculty where salary > (select max(salary) from faculty where dept_Id = 1);
+
+
+33. Display students who have never enrolled in a course taught by faculty member 102.
+
+select stuedent_name 
+from student s 
+select student_name 
+
+
+Section 6 — CASE, views and window functions
+
+
+38. Use CASE to assign a fee category to each course: Budget (below 5000), Standard (5000–6000), and Premium (above 6000).
+
+select course_name, fee,
+	case 
+	   when fee < 5000 then 'Budget'
+	   when fee between 5000 and 6000 then 'Standard'
+	   else 'Premium'
+	end as Fee_Category
+from course;
+
+
+39. Create a view showing student name, department name, total courses enrolled, and average marks for each student, including students without enrollments.
+
+create view student_detail
+as
+select s.student_name, d.dept_name, count(e.course_id)as total_courses_enrolled, avg(e.marks) as avg_marks
+from student s left join department d on s.dept_id = d.dept_id
+left join enrollment e on s.student_id = e.student_id
+group by s.student_id, s.student_name, d.dept_id ;
+
+select * from student_detail;
+
+40. Rank faculty members by salary within each department using DENSE_RANK, showing the department name and rank.
+select f.faculty_name, d.dept_name, f.salary,
+	dense_rank() over(partition by f.dept_id order by f.salary desc) as salary_rank
+from faculty f join department d on f.dept_id = d.dept_id;
+
+41. Display each enrollment's marks and the difference between those marks and the highest mark in the same course, using a window function.
+
+select course_id, marks, 
+	max(marks) over(partition by course_id) - marks as diff_from_highest
+from enrollment;
+
+
+42. Show the cumulative number of enrollments for each course ordered by enrollment date, with a deterministic tie-breaker.
+
+select course_id,enroll_date,
+	count(*) over(partition by course_id order by enroll_date, student_id) as cumulative_number
+from enrollment;
+
+43. Find the top two distinct mark levels in every course using DENSE_RANK. Preserve all students tied at those levels.
+
+select student_id, course_id, marks, mark_level from
+(select student_id, course_id, marks, 
+	dense_rank() over(partition by course_id order by marks desc ) as mark_level
+from enrollment where marks is not null )
+as ranked
+where mark_level <=2;
+
+
+
+Section 7 — Transactions, permissions and metadata
+
+44. Start a transaction, change the fee of course 201, create a savepoint, then change the fee of course 202. Roll back to the savepoint and commit. Verify which change remains.
+
+start transaction;
+
+update course set fee = 10000 where course_id = 201;
+
+savepoint sp1;
+
+update course set fee = 9000 where course_id = 201;
+
+rollback to savepoint sp1;
+
+commit;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
